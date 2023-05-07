@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "djoser",
     "rest_framework_simplejwt",
+    "drf_yasg",
     "corsheaders",
     "django_filters",
     "users",
@@ -94,6 +95,14 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {},
 }
 
 LANGUAGE_CODE = 'ru'
