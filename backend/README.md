@@ -18,7 +18,7 @@ source venv/Scripts/activate
 
 pip install -r requirements.txt
 
-# for prod create .env in /conf folder 
+# for dev create .env in /conf folder 
 
 py manage.py migrate
 py manage.py runserver
