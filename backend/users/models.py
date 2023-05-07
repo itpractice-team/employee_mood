@@ -3,11 +3,43 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from .managers import UserManager
 
 
+class Department(models.Model):
+
+    name = models.CharField(
+        'Наименование',
+        max_length=255,
+    )
+    description = models.TextField(
+        'Описание',
+        max_length=500,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = 'Отдел'
+        verbose_name_plural = 'Отделы'
+
+    def __str__(self):
+        return self.name
+
+
 class User(AbstractBaseUser, PermissionsMixin):
+
+    HR = 'hr'
+    CHIEF = 'chief'
+    EMPLOYEE = 'employee'
+
+    ROLES = (
+        (HR, 'HR'),
+        (CHIEF, 'Руководитель'),
+        (EMPLOYEE, 'Работник')
+    )
 
     email = models.EmailField(
         unique=True,
@@ -24,10 +56,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=150,
         blank=True
     )
+    department = models.ForeignKey(
+        Department,
+        verbose_name='Отдел',
+        related_name='employees',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+    role = models.CharField(
+        'Роль',
+        choices=ROLES,
+        max_length=10,
+        default='employee',
+        db_index=True
+    )
     avatar = models.ImageField(
         upload_to='users/avatars/',
         blank=True,
         null=True
+    )
+    about = models.TextField(
+        'О себе',
+        max_length=500,
+        blank=True,
+        null=True
+    )
+    phone = PhoneNumberField(
+        'Телефон',
+        blank=True
     )
     is_staff = models.BooleanField(
         _('staff status'),
@@ -45,6 +102,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+    @property
+    def is_hr(self):
+        return self.role == self.HR
+
+    @property
+    def is_chief(self):
+        return self.role == self.CHIEF
+
+    @property
+    def is_employee(self):
+        return self.role == self.EMPLOYEE
 
     class Meta:
         verbose_name = 'Пользователь'
