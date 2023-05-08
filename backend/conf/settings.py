@@ -92,6 +92,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
 }
 
 SIMPLE_JWT = {
@@ -100,25 +102,16 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-DJOSER = {
-    'SERIALIZERS': {
-        'user': 'api.v1.serializers.UserSerializer',
-        'current_user': 'api.v1.serializers.UserSerializer',
-    },
-    'PERMISSIONS': {
-        'activation': ['rest_framework.permissions.AllowAny'],
-        'password_reset': ['rest_framework.permissions.CurrentUserOrAdmin'],
-        'password_reset_confirm': ['rest_framework.permissions.CurrentUserOrAdmin'],
-        'set_password': ['rest_framework.permissions.CurrentUserOrAdmin'],
-        'username_reset': ['rest_framework.permissions.IsAdminOnly'],
-        'username_reset_confirm': ['rest_framework.permissions.IsAdminOnly'],
-        'set_username': ['rest_framework.permissions.IsAdminOnly'],
-        'user_create': ['rest_framework.permissions.AllowAny'],
-        'user_delete': ['rest_framework.permissions.CurrentUserOrAdmin'],
-        'user': ['rest_framework.permissions.IsAuthenticated'],
-        'user_list': ['rest_framework.permissions.IsAuthenticated'],
-        'token_create': ['rest_framework.permissions.AllowAny'],
-        'token_destroy': ['rest_framework.permissions.IsAuthenticated'],
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        },
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
     }
 }
 
