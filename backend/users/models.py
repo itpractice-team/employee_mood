@@ -29,6 +29,27 @@ class Department(models.Model):
         return self.name
 
 
+class Position(models.Model):
+
+    name = models.CharField(
+        'Название должности',
+        max_length=255,
+    )
+    description = models.TextField(
+        'Описание',
+        max_length=500,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = 'Должность'
+        verbose_name_plural = 'Должности'
+
+    def __str__(self):
+        return self.name
+
+
 class User(AbstractBaseUser, PermissionsMixin):
 
     HR = 'hr'
@@ -42,23 +63,30 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     email = models.EmailField(
+        _('email'),
         unique=True,
-        max_length=255,
-        blank=False
+        max_length=255
     )
     first_name = models.CharField(
         _('first name'),
-        max_length=30,
-        blank=True
+        max_length=120
     )
     last_name = models.CharField(
         _('last name'),
-        max_length=150,
-        blank=True
+        max_length=120
     )
     department = models.ForeignKey(
         Department,
         verbose_name='Отдел',
+        related_name='employees',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        db_index=True
+    )
+    position = models.ForeignKey(
+        Position,
+        verbose_name='Должность',
         related_name='employees',
         null=True,
         blank=True,
@@ -84,7 +112,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     phone = PhoneNumberField(
         'Телефон',
-        blank=True
+        blank=True,
+        null=True
     )
     is_staff = models.BooleanField(
         _('staff status'),
