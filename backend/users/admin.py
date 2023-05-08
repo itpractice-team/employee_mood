@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.db.models import Count
 
-from .models import Department, Position, User
+from .models import Department, Position, User, Hobby
 
 
 class EmployeesCountMixin:
@@ -42,13 +42,19 @@ class PositionAdmin(EmployeesCountMixin, admin.ModelAdmin):
     inlines = [UserInline,]
 
 
+@admin.register(Hobby)
+class HobbyAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'first_name', 'last_name', 'password')}),
         (('Служебная информация'), {'fields': (
-            'department', 'position', 'role', 'avatar', 'phone'
+            'department', 'position', 'role', 'phone'
         )}),
+        (('Прочее'), {'fields': ('avatar', 'hobbies')}),
         (('Роли и права'), {
             'fields': ('is_active', 'is_staff', 'is_superuser'),
         }),

@@ -50,6 +50,21 @@ class Position(models.Model):
         return self.name
 
 
+class Hobby(models.Model):
+
+    name = models.CharField(
+        max_length=255,
+        unique=True
+    )
+
+    class Meta:
+        verbose_name = 'Список интересов'
+        verbose_name_plural = 'Списки интересов'
+
+    def __str__(self):
+        return self.name
+
+
 class User(AbstractBaseUser, PermissionsMixin):
 
     HR = 'hr'
@@ -92,6 +107,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         on_delete=models.SET_NULL
     )
+    hobbies = models.ManyToManyField(
+        Hobby,
+        verbose_name='Хобби',
+        related_name='users',
+        blank=True
+    )
     role = models.CharField(
         'Роль',
         choices=ROLES,
@@ -100,6 +121,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_index=True
     )
     avatar = models.ImageField(
+        'Аватар/Фото',
         upload_to='users/avatars/',
         blank=True,
         null=True
