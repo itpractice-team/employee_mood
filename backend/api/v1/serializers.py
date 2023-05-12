@@ -21,12 +21,21 @@ class HobbySerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    department = DepartmentSerializer()
-    position = PositionSerializer()
-    hobbies = HobbySerializer(many=True)
+    department = DepartmentSerializer(read_only=True)
+    position = PositionSerializer(read_only=True)
+    hobbies = HobbySerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = (
-            'id', 'email', 'first_name', 'last_name', 'role', 'position',
-            'department', 'hobbies', 'avatar', 'about', 'phone', 'date_joined')
+            'id', 'email', 'first_name', 'last_name', 'patronymic', 'role',
+            'position', 'department', 'hobbies', 'avatar', 'about', 'phone',
+            'date_joined'
+        )
+
+
+class SendInviteSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    class Meta:
+        fields = ('email',)

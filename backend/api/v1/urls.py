@@ -21,6 +21,11 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path(
+        'users/send_invite/',
+        views.SendInviteView.as_view(),
+        name='send_invite'
+    ),
     path('', include(v10.urls)),
     path('auth/', include('djoser.urls.jwt')),
     re_path(
@@ -32,10 +37,5 @@ urlpatterns = [
         r'^swagger/$',
         schema_view.with_ui('swagger', cache_timeout=0),
         name='schema-swagger-ui'
-    ),
-    re_path(
-        r'^redoc/$',
-        schema_view.with_ui('redoc', cache_timeout=0),
-        name='schema-redoc'
-    ),
+    )
 ]

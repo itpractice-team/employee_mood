@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -11,11 +13,11 @@ from .managers import UserManager
 class Department(models.Model):
 
     name = models.CharField(
-        'Наименование',
+        verbose_name='Наименование',
         max_length=255,
     )
     description = models.TextField(
-        'Описание',
+        verbose_name='Описание',
         max_length=500,
         null=True,
         blank=True
@@ -32,11 +34,11 @@ class Department(models.Model):
 class Position(models.Model):
 
     name = models.CharField(
-        'Название должности',
+        verbose_name='Название должности',
         max_length=255,
     )
     description = models.TextField(
-        'Описание',
+        verbose_name='Описание',
         max_length=500,
         null=True,
         blank=True
@@ -78,17 +80,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     email = models.EmailField(
-        _('email'),
+        verbose_name=_('email'),
         unique=True,
         max_length=255
     )
     first_name = models.CharField(
-        _('first name'),
-        max_length=120
+        verbose_name=_('first name'),
+        max_length=120,
+        blank=True,
+        null=True
     )
     last_name = models.CharField(
-        _('last name'),
-        max_length=120
+        verbose_name=_('last name'),
+        max_length=120,
+        blank=True,
+        null=True
+    )
+    patronymic = models.CharField(
+        verbose_name='Отчество',
+        max_length=120,
+        blank=True,
+        null=True
     )
     department = models.ForeignKey(
         Department,
@@ -114,39 +126,39 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True
     )
     role = models.CharField(
-        'Роль',
+        verbose_name='Роль',
         choices=ROLES,
         max_length=10,
         default='employee',
         db_index=True
     )
     avatar = models.ImageField(
-        'Аватар/Фото',
+        verbose_name='Аватар/Фото',
         upload_to='users/avatars/',
         blank=True,
         null=True
     )
     about = models.TextField(
-        'О себе',
+        verbose_name='О себе',
         max_length=500,
         blank=True,
         null=True
     )
     phone = PhoneNumberField(
-        'Телефон',
+        verbose_name='Телефон',
         blank=True,
         null=True
     )
     is_staff = models.BooleanField(
-        _('staff status'),
+        verbose_name=_('staff status'),
         default=False
     )
     is_active = models.BooleanField(
-        _('active'),
+        verbose_name=_('active'),
         default=True
     )
     date_joined = models.DateTimeField(
-        _('date joined'),
+        verbose_name=_('date joined'),
         default=timezone.now,
     )
 
@@ -172,3 +184,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class InviteCode(models.Model):
+
+    email = models.EmailField(
+        unique=True,
+        max_length=255
+    )
+    code = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    # expires_at будет в настройках сервиса в core позже
+
+    def __str__(self):
+        return self.token
