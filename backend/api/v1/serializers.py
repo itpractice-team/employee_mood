@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from users.models import Department, Hobby, Position, User
 
@@ -39,3 +40,16 @@ class SendInviteSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('email',)
+
+
+class RegisterSerializer(serializers.Serializer):
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+
+    class Meta:
+        fields = ('first_name', 'last_name', 'password')
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value

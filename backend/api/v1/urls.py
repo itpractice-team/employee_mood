@@ -26,6 +26,11 @@ urlpatterns = [
         views.SendInviteView.as_view(),
         name='send_invite'
     ),
+    path(
+        'users/register/',
+        views.RegisterView.as_view(),
+        name='register'
+    ),
     path('', include(v10.urls)),
     path('auth/', include('djoser.urls.jwt')),
     re_path(

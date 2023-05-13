@@ -86,15 +86,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(
         verbose_name=_('first name'),
-        max_length=120,
-        blank=True,
-        null=True
+        max_length=120
     )
     last_name = models.CharField(
         verbose_name=_('last name'),
-        max_length=120,
-        blank=True,
-        null=True
+        max_length=120
     )
     patronymic = models.CharField(
         verbose_name='Отчество',
@@ -165,6 +161,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     @property
     def is_hr(self):
@@ -193,13 +190,12 @@ class InviteCode(models.Model):
         max_length=255
     )
     code = models.UUIDField(
-        primary_key=True,
+        unique=True,
         default=uuid.uuid4
     )
-    created_at = models.DateTimeField(
+    created = models.DateTimeField(
         auto_now_add=True
     )
-    # expires_at будет в настройках сервиса в core позже
 
     def __str__(self):
         return self.token
