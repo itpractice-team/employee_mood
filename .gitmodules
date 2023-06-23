@@ -1,6 +1,6 @@
 [submodule "employee_mood_frontend"]
 	path = employee_mood_frontend
 	url = https://github.com/dev0x451/employee_mood_frontend/
-[submodule "employee_mood_backend"]
-	path = employee_mood_backend
-	url = https://github.com/pervukhina-anna/employee_mood_backend/
+[submodule "back"]
+	path = back
+	url = https://github.com/moodbeat/back/
